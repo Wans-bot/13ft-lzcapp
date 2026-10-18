@@ -25,7 +25,7 @@ build:
 images:
   - id: 13ft
     target: service
-    service: app
+    service: web
     source: ghcr.io/wasi-master/13ft
     channel: stable
     # 跟随整支 1.x.y 版本族，不要写成当前版本，否则永远发现不了 1.4.0
