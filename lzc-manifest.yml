@@ -1,0 +1,19 @@
+application:
+  subdomain: thirteenft
+  health_check:
+    test_url: http://app:5000/
+    disable: false
+    start_period: 30s
+    timeout: 5s
+  upstreams:
+    - location: /
+      backend: http://app:5000
+
+services:
+  app:
+    image: ghcr.io/wasi-master/13ft:1.3.0
+    environment:
+      # 上游按 LOCALE 环境变量选择界面语言（app/portable.py: get_locale()），
+      # 固定 zh 即为上游原生中文，不做任何翻译或注入
+      - LOCALE=zh
+      - PORT=5000

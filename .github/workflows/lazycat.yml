@@ -1,0 +1,33 @@
+name: LazyCat LPK
+
+# 跟随上游镜像标签自动更新；实机验收通过前官方商店保持关闭。
+on:
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "auto 自动判断 / check 只检查 / build 只构建 / publish-official 只提交官方商店"
+        type: choice
+        options: [auto, check, build, publish-official]
+        default: auto
+      dry-run:
+        description: "只演练不写文件、不复制镜像、不发布"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  lazycat:
+    # 固定提交，不用浮动 v1 标签，保证构建行为可复现
+    uses: ca-x/lazycat-github-action/.github/workflows/lazycat.yml@3dabca95f6eb0c3a6c4fc889631b13a055852912
+    with:
+      operation: ${{ inputs.operation || 'auto' }}
+      config: .github/lazycat-action.yml
+      dry-run: ${{ inputs.dry-run || false }}
+      versioned-release-asset: true
+    secrets:
+      LAZYCAT_TOKEN: ${{ secrets.LAZYCAT_TOKEN }}
